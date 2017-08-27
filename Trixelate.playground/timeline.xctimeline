@@ -3,7 +3,17 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/rob/Developer/Trixelate/Trixelate.playground#CharacterRangeLen=10&amp;CharacterRangeLoc=4319&amp;EndingColumnNumber=22&amp;EndingLineNumber=98&amp;StartingColumnNumber=12&amp;StartingLineNumber=98&amp;Timestamp=525479190.766466"
+         documentLocation = "file:///Users/rob/Developer/Trixelate/Trixelate.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=4470&amp;EndingColumnNumber=0&amp;EndingLineNumber=106&amp;StartingColumnNumber=0&amp;StartingLineNumber=106&amp;Timestamp=525537445.866897"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/rob/Developer/Trixelate/Trixelate.playground#CharacterRangeLen=253&amp;CharacterRangeLoc=2843&amp;EndingColumnNumber=12&amp;EndingLineNumber=72&amp;StartingColumnNumber=8&amp;StartingLineNumber=69&amp;Timestamp=525537445.867055"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/rob/Developer/Trixelate/Trixelate.playground#CharacterRangeLen=10&amp;CharacterRangeLoc=4686&amp;EndingColumnNumber=27&amp;EndingLineNumber=111&amp;StartingColumnNumber=17&amp;StartingLineNumber=111&amp;Timestamp=525537445.867176"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
