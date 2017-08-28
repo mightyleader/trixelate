@@ -43,7 +43,7 @@ class TrixelatedView: UIView {
         bezierPath.addLine(to: CGPoint(x: baseX + trixelWidth,
                                        y: (baseY + (trixelHeight * 0.5))))
         bezierPath.close()
-        bezierPath.stroke()
+//        bezierPath.stroke()
         let fromRect = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
                             y: CGFloat(baseY),
                             width: CGFloat(trixelWidth),
@@ -62,7 +62,7 @@ class TrixelatedView: UIView {
         bezierPathB.addLine(to: CGPoint(x: baseX,
                                         y: (baseY + trixelHeight)))
         bezierPathB.close()
-        bezierPathB.stroke()
+//        bezierPathB.stroke()
         let fromRectB = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
                              y: CGFloat(baseY),
                              width: CGFloat(trixelWidth),
@@ -77,16 +77,20 @@ class TrixelatedView: UIView {
 	}
 }
 
-class AveragableImage: UIImage {
+extension UIView {
   
-  convenience init(view: UIView) {
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
-    view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
-    let image = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    self.init(cgImage: (image?.cgImage)!)
+  // Using a function since `var image` might conflict with an existing variable
+  // (like on `UIImageView`)
+  func asImage() -> UIImage {
+    let renderer = UIGraphicsImageRenderer(bounds: bounds)
+    return renderer.image { rendererContext in
+      layer.render(in: rendererContext.cgContext)
+    }
   }
-  
+}
+
+class AveragableImage: UIImage {
+
   func averageColor() -> UIColor {
     let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4)
     let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
@@ -106,11 +110,14 @@ class AveragableImage: UIImage {
 }
 
 
-guard let fileUrl = Bundle.main.url(forResource: "MRS_6459schukar2048", withExtension: "jpg") else { fatalError() }
+guard let fileUrl = Bundle.main.url(forResource: "IMG_0123", withExtension: "jpg") else { fatalError() }
 let data = try Data(contentsOf: fileUrl)
 let image = AveragableImage(data: data)
 let trixelTest = TrixelatedView(image: image!)
-let trixellatedImage = AveragableImage(view: trixelTest)
+let trixellatedImage = trixelTest.asImage()
+let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
+let imageData = UIImagePNGRepresentation(trixellatedImage) as! Data
+try! imageData.write(to: path, options: .noFileProtection)
 
 
 
