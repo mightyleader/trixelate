@@ -3,6 +3,7 @@
 import UIKit
 import Foundation
 import PlaygroundSupport
+import CoreImage
 
 class TrixelatedView: UIView {
 
@@ -22,7 +23,7 @@ class TrixelatedView: UIView {
 		self.backgroundColor = UIColor.white
 
 		let ratio = self.frame.size.width / self.frame.size.height
-		let trixelHeight = self.frame.size.height / 30
+		let trixelHeight = self.frame.size.height / 45
 		let trixelWidth = trixelHeight * ratio
     let columns = self.frame.size.width / trixelWidth
     let rows = self.frame.size.height / trixelHeight
@@ -78,9 +79,6 @@ class TrixelatedView: UIView {
 }
 
 extension UIView {
-  
-  // Using a function since `var image` might conflict with an existing variable
-  // (like on `UIImageView`)
   func asImage() -> UIImage {
     let renderer = UIGraphicsImageRenderer(bounds: bounds)
     return renderer.image { rendererContext in
@@ -90,7 +88,6 @@ extension UIView {
 }
 
 class AveragableImage: UIImage {
-
   func averageColor() -> UIColor {
     let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4)
     let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
@@ -106,18 +103,32 @@ class AveragableImage: UIImage {
       return UIColor(red: CGFloat(rgba[0]) / 255.0, green: CGFloat(rgba[1]) / 255.0, blue: CGFloat(rgba[2]) / 255.0, alpha: CGFloat(rgba[3]) / 255.0)
     }
   }
-  
 }
 
 
-guard let fileUrl = Bundle.main.url(forResource: "IMG_0123", withExtension: "jpg") else { fatalError() }
+guard let fileUrl = Bundle.main.url(forResource: "fuji-san", withExtension: "jpg") else { fatalError() }
 let data = try Data(contentsOf: fileUrl)
 let image = AveragableImage(data: data)
 let trixelTest = TrixelatedView(image: image!)
 let trixellatedImage = trixelTest.asImage()
 let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
-let imageData = UIImagePNGRepresentation(trixellatedImage) as! Data
-try! imageData.write(to: path, options: .noFileProtection)
+let imageData = UIImagePNGRepresentation(trixellatedImage)
+try! imageData?.write(to: path, options: .noFileProtection)
+
+//let context = CIContext()
+//let filter = CIFilter(name: "CIGaussianBlur")!
+//if let ci = CIImage(image: trixellatedImage) {
+//  filter.setValue(2.0, forKey: kCIInputRadiusKey)
+//  filter.setValue(ci, forKey: kCIInputImageKey)
+//  if let result = filter.outputImage {
+//    let cgImage = context.createCGImage(result, from: result.extent)
+//    let desaturatedImage = UIImage(cgImage: cgImage!)
+//    let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
+//    let imageData = UIImagePNGRepresentation(desaturatedImage)
+//    try! imageData?.write(to: path, options: .noFileProtection)
+//  }
+//
+//}
 
 
 
