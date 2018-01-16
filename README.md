@@ -12,4 +12,4 @@ Image is copyright [Jane Newland](https://www.janenewland.com)
 
 ## Trixelated
 
-![trixelated](https://github.com/mightyleader/trixelate/blob/master/16-01-18-12.20.00.jpg)
+![trixelated](https://github.com/mightyleader/trixelate/blob/master/16-01-18-12.20.00.png)
