@@ -6,7 +6,9 @@ Ensure you have made a directory in `~/Documents` called `Shared Playground Data
 
 ## Original
 
-![original](https://github.com/mightyleader/trixelate/blob/master/IMG_3291.JPG)
+![original](https://www.instagram.com/p/Bb47gGQDc5D/)
+
+Image is copyright [Jane Newland](https://www.janenewland.com)
 
 ## Trixelated
 
