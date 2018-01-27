@@ -23,7 +23,7 @@ class TrixelatedView: UIView {
 		self.backgroundColor = UIColor.white
 
 		let ratio = self.frame.size.width / self.frame.size.height
-		let trixelHeight = self.frame.size.height / 45
+		let trixelHeight = self.frame.size.height / 35
 		let trixelWidth = trixelHeight * ratio
     let columns = self.frame.size.width / trixelWidth
     let rows = self.frame.size.height / trixelHeight
@@ -103,15 +103,48 @@ class AveragableImage: UIImage {
   }
 }
 
+func currentDateTimeAsString() -> String {
+  let dateFormatter = DateFormatter()
+  dateFormatter.dateFormat = "dd-MM-yy|hh.mm.ss"
+  return dateFormatter.string(from: Date())
+}
 
-guard let fileUrl = Bundle.main.url(forResource: "IMG_2692", withExtension: "jpg") else { fatalError() }
-let data = try Data(contentsOf: fileUrl)
-let image = AveragableImage(data: data)
-let trixelTest = TrixelatedView(image: image!)
-let trixellatedImage = trixelTest.asImage()
-let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
-let imageData = UIImagePNGRepresentation(trixellatedImage)
-try! imageData?.write(to: path, options: .noFileProtection)
+func trixelate(imageAtURL url: URL) -> UIImage? {
+  do {
+//    print(url)
+    let data = try Data(contentsOf: url)
+    let image = AveragableImage(data: data)
+    let trixelTest = TrixelatedView(image: image!)
+    return trixelTest.asImage()
+  } catch {
+    // Fail case empty
+  }
+  return nil
+}
+
+func processSharedDataForPlayground() {
+  let rootPath = playgroundSharedDataDirectory.appendingPathComponent("Trixelated")
+  let sourcePath = rootPath.appendingPathComponent("Source")
+  do {
+    let paths = try FileManager.default.contentsOfDirectory(atPath: sourcePath.path)
+    for path in paths {
+      let pathURL = sourcePath.appendingPathComponent(path)
+      if let trixellatedImage = trixelate(imageAtURL: pathURL) {
+        let datetimeString = currentDateTimeAsString().appending(".png")
+        let newPath = rootPath.appendingPathComponent(datetimeString)
+        let imageData = UIImagePNGRepresentation(trixellatedImage)
+        try! imageData?.write(to: newPath, options: .noFileProtection)
+      }
+    }
+  } catch  {
+    // Fail case empty
+  }
+  
+}
+
+PlaygroundPage.current.needsIndefiniteExecution = true
+processSharedDataForPlayground()
+
 
 
 
