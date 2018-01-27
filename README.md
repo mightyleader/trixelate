@@ -2,8 +2,11 @@
 A Swift playground to pixelate images into triangles
 
 ## IMPORTANT
-Ensure you have made a directory in `~/Documents` called `Shared Playground Data`. This is accessible by Playgrounds as a place in the filesystem to access files with read/write permissions.
+Ensure you have made a directory in `~/Documents` called `Shared Playground Data`. 
+This is accessible by Playgrounds as a place in the filesystem to access files with read/write permissions.
+
 Inside the shared folder create a new folder called `Trixelated` which will be where the trixelated images are written to.
+
 Inside `Trixelated` create a folder called `Source` which is where you put the images you want to trixelate.
 
 ## Original
