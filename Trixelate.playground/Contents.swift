@@ -45,10 +45,7 @@ class TrixelatedView: UIView {
                                        y: (baseY + (trixelHeight * 0.5))))
         bezierPath.close()
 //        bezierPath.stroke()
-        let fromRect = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
-                                    y: CGFloat(baseY),
-                                    width: CGFloat(trixelWidth),
-                                    height: CGFloat(trixelHeight))
+        let fromRect = bezierPath.bounds
         
         if let drawImage = self.image?.cgImage!.cropping(to: fromRect) {
           let bimage = AveragableImage(cgImage: drawImage)
@@ -66,10 +63,7 @@ class TrixelatedView: UIView {
                                         y: (baseY + trixelHeight)))
         bezierPathB.close()
         //        bezierPathB.stroke()
-        let fromRectB = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
-                                     y: CGFloat(baseY),
-                                     width: CGFloat(trixelWidth),
-                                     height: CGFloat(trixelHeight))
+        let fromRectB = bezierPathB.bounds
         if let drawImageB = self.image?.cgImage!.cropping(to: fromRectB) {
           let cimage = AveragableImage(cgImage: drawImageB)
           let averageColourB = cimage.averageColor().cgColor //areaAverage(in: vector).cgColor //= UIColor.blue.cgColor//
