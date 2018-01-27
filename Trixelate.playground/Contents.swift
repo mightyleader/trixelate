@@ -46,14 +46,16 @@ class TrixelatedView: UIView {
         bezierPath.close()
 //        bezierPath.stroke()
         let fromRect = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
-                            y: CGFloat(baseY),
-                            width: CGFloat(trixelWidth),
-                            height: CGFloat(trixelHeight))
-        let drawImage = self.image?.cgImage!.cropping(to: fromRect)
-        let bimage = AveragableImage(cgImage: drawImage!)
-        let averageColour = bimage.averageColor().cgColor //areaAverage(in: vector).cgColor //= UIColor.blue.cgColor//
-        context?.setFillColor(averageColour)
-        bezierPath.fill()
+                                    y: CGFloat(baseY),
+                                    width: CGFloat(trixelWidth),
+                                    height: CGFloat(trixelHeight))
+        
+        if let drawImage = self.image?.cgImage!.cropping(to: fromRect) {
+          let bimage = AveragableImage(cgImage: drawImage)
+          let averageColour = bimage.averageColor().cgColor //areaAverage(in: vector).cgColor //= UIColor.blue.cgColor//
+          context?.setFillColor(averageColour)
+          bezierPath.fill()
+        }
         
         let bezierPathB = UIBezierPath()
         bezierPathB.lineWidth = 0.0
@@ -63,16 +65,18 @@ class TrixelatedView: UIView {
         bezierPathB.addLine(to: CGPoint(x: baseX,
                                         y: (baseY + trixelHeight)))
         bezierPathB.close()
-//        bezierPathB.stroke()
+        //        bezierPathB.stroke()
         let fromRectB = CGRect(x: CGFloat(baseX + trixelWidth * 0.5),
-                             y: CGFloat(baseY),
-                             width: CGFloat(trixelWidth),
-                             height: CGFloat(trixelHeight))
-        let drawImageB = self.image?.cgImage!.cropping(to: fromRectB)
-        let cimage = AveragableImage(cgImage: drawImageB!)
-        let averageColourB = cimage.averageColor().cgColor //areaAverage(in: vector).cgColor //= UIColor.blue.cgColor//
-        context?.setFillColor(averageColourB)
-        bezierPathB.fill()
+                                     y: CGFloat(baseY),
+                                     width: CGFloat(trixelWidth),
+                                     height: CGFloat(trixelHeight))
+        if let drawImageB = self.image?.cgImage!.cropping(to: fromRectB) {
+          let cimage = AveragableImage(cgImage: drawImageB)
+          let averageColourB = cimage.averageColor().cgColor //areaAverage(in: vector).cgColor //= UIColor.blue.cgColor//
+          context?.setFillColor(averageColourB)
+          bezierPathB.fill()
+          
+        }
       }
     }
 	}
@@ -106,7 +110,7 @@ class AveragableImage: UIImage {
 }
 
 
-guard let fileUrl = Bundle.main.url(forResource: "fuji-san", withExtension: "jpg") else { fatalError() }
+guard let fileUrl = Bundle.main.url(forResource: "IMG_2692", withExtension: "jpg") else { fatalError() }
 let data = try Data(contentsOf: fileUrl)
 let image = AveragableImage(data: data)
 let trixelTest = TrixelatedView(image: image!)
@@ -115,20 +119,6 @@ let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
 let imageData = UIImagePNGRepresentation(trixellatedImage)
 try! imageData?.write(to: path, options: .noFileProtection)
 
-//let context = CIContext()
-//let filter = CIFilter(name: "CIGaussianBlur")!
-//if let ci = CIImage(image: trixellatedImage) {
-//  filter.setValue(2.0, forKey: kCIInputRadiusKey)
-//  filter.setValue(ci, forKey: kCIInputImageKey)
-//  if let result = filter.outputImage {
-//    let cgImage = context.createCGImage(result, from: result.extent)
-//    let desaturatedImage = UIImage(cgImage: cgImage!)
-//    let path = playgroundSharedDataDirectory.appendingPathComponent("export.png")
-//    let imageData = UIImagePNGRepresentation(desaturatedImage)
-//    try! imageData?.write(to: path, options: .noFileProtection)
-//  }
-//
-//}
 
 
 
