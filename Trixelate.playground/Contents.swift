@@ -10,7 +10,7 @@ class TrixelatedView: UIView {
     let image: AveragableImage?
     var widthRatio: Int
     
-    init(image: UIImage, ratio: Int = 10) {
+    init(image: UIImage, ratio: Int = 15) {
         self.image = (image as! AveragableImage)
         self.widthRatio = ratio
         super.init(frame: CGRect(x: 0.0, y: 0.0, width: image.size.width, height: image.size.height))
@@ -112,9 +112,10 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
     do {
         //    print(url)
         let data = try Data(contentsOf: url)
-        let image = AveragableImage(data: data)
-        let trixelTest = TrixelatedView(image: image!, ratio: 10)
-        return trixelTest.asImage()
+        if let image = AveragableImage(data: data) {
+          let trixelTest = TrixelatedView(image: image, ratio: 14)
+          return trixelTest.asImage()
+        }
     } catch {
         // Fail case empty
     }
