@@ -41,7 +41,7 @@ class TrixelatedView: UIView {
         let offset = CGFloat(column).truncatingRemainder(dividingBy: 2.0) == 0 ? 0.0 : -0.5 as CGFloat
         let baseY = CGFloat(row) * trixelHeight + (trixelHeight * offset)
         let bezierPath = UIBezierPath()
-        bezierPath.lineWidth = 0.0
+        bezierPath.lineWidth = 1.0
         bezierPath.move(to: CGPoint(x: baseX, y: baseY ))
         bezierPath.addLine(to: CGPoint(x: baseX + trixelWidth,
                                        y: (baseY - (trixelHeight * 0.5))))
@@ -54,11 +54,14 @@ class TrixelatedView: UIView {
           let bimage = AveragableImage(cgImage: drawImage)
           let averageColour = bimage.averageColor().cgColor
           context?.setFillColor(averageColour)
+          context?.setStrokeColor(averageColour)
+          context?.setShouldAntialias(true)
+          bezierPath.stroke()
           bezierPath.fill()
         }
         
         let bezierPathB = UIBezierPath()
-        bezierPathB.lineWidth = 0.0
+        bezierPathB.lineWidth = 1.0
         bezierPathB.move(to: CGPoint(x: baseX, y: baseY))
         bezierPathB.addLine(to: CGPoint(x: baseX + trixelWidth,
                                         y: (baseY + trixelHeight * 0.5)))
@@ -70,6 +73,9 @@ class TrixelatedView: UIView {
           let cimage = AveragableImage(cgImage: drawImageB)
           let averageColourB = cimage.averageColor().cgColor
           context?.setFillColor(averageColourB)
+          context?.setStrokeColor(averageColourB)
+          context?.setShouldAntialias(true)
+          bezierPathB.stroke()
           bezierPathB.fill()
           
         }
@@ -116,7 +122,7 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
     //    print(url)
     let data = try Data(contentsOf: url)
     if let image = AveragableImage(data: data) {
-      let trixelTest = TrixelatedView(image: image, ratio: 17)
+      let trixelTest = TrixelatedView(image: image, ratio: 15)
       return trixelTest.asImage()
     }
   } catch {
