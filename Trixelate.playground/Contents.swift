@@ -119,7 +119,6 @@ func currentDateTimeAsString() -> String {
 
 func trixelate(imageAtURL url: URL) -> UIImage? {
   do {
-    //    print(url)
     let data = try Data(contentsOf: url)
     if let image = AveragableImage(data: data) {
       let trixelTest = TrixelatedView(image: image, ratio: 15)
