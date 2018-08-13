@@ -2,7 +2,6 @@
 
 
 import UIKit
-import Foundation
 import PlaygroundSupport
 import CoreImage
 
@@ -77,7 +76,6 @@ class TrixelatedView: UIView {
           context?.setShouldAntialias(true)
           bezierPathB.stroke()
           bezierPathB.fill()
-          
         }
       }
     }
@@ -117,17 +115,32 @@ func currentDateTimeAsString() -> String {
   return dateFormatter.string(from: Date())
 }
 
+func guidAsString() -> String {
+    let guid = UUID.init().uuidString
+    return guid
+}
+
 func trixelate(imageAtURL url: URL) -> UIImage? {
   do {
     let data = try Data(contentsOf: url)
     if let image = AveragableImage(data: data) {
-      let trixelTest = TrixelatedView(image: image, ratio: 15)
-      return trixelTest.asImage()
+      let trixelTest = TrixelatedView(image: image, ratio: 10)
+      let filteredTrixel = applyFilters(to: trixelTest.asImage())
+      return filteredTrixel
     }
   } catch {
     // Fail case empty
   }
   return nil
+}
+
+func applyFilters(to image: UIImage) -> UIImage {
+    let imageContext = CIContext.init(options: nil)
+    let coreImage = CIImage(image: image)
+    let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : coreImage!, "inputRadius": 10])
+    let filteredCoreImage = filter?.value(forKey: "outputImage")
+    let filteredCGImage = imageContext.createCGImage(filteredCoreImage as! CIImage, from: (filteredCoreImage! as AnyObject).extent)
+    return UIImage(cgImage: filteredCGImage!)
 }
 
 func processSharedDataForPlayground() {
@@ -138,8 +151,10 @@ func processSharedDataForPlayground() {
     for path in paths {
       let pathURL = sourcePath.appendingPathComponent(path)
       if let trixellatedImage = trixelate(imageAtURL: pathURL) {
-        let datetimeString = currentDateTimeAsString().appending(".png")
-        let newPath = rootPath.appendingPathComponent(datetimeString)
+        
+        //let datetimeString = currentDateTimeAsString().appending(".png")
+        let guidString = guidAsString().appending(".png")
+        let newPath = rootPath.appendingPathComponent(guidString)
         let imageData = UIImagePNGRepresentation(trixellatedImage)
         try! imageData?.write(to: newPath, options: .noFileProtection)
       }
