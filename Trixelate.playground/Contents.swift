@@ -185,11 +185,9 @@ func processSharedDataForPlayground() {
     for path in paths {
       let pathURL = sourcePath.appendingPathComponent(path)
       if let trixellatedImage = trixelate(imageAtURL: pathURL) {
-        
-        //let datetimeString = currentDateTimeAsString().appending(".png")
-        let guidString = guidAsString().appending(".png")
+        let guidString = guidAsString().appending(".jpg")
         let newPath = rootPath.appendingPathComponent(guidString)
-        let imageData = UIImagePNGRepresentation(trixellatedImage)
+        let imageData = UIImageJPEGRepresentation(trixellatedImage, 0.5)
         try! imageData?.write(to: newPath, options: .noFileProtection)
       }
     }
