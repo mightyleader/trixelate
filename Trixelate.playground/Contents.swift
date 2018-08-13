@@ -135,24 +135,46 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
 }
 
 func applyFilters(to image: UIImage) -> UIImage {
-    _ = CIContext()
-    let coreImage = CIImage(image: image)
-    if let filteredCoreImage = blurFilter(on: coreImage!, radius: 10) {
-        return UIImage(ciImage: filteredCoreImage)
+  let context = CIContext()
+  context
+  if let coreImage = CIImage(image: image) {
+    let randomCoreImage =  cropFilter(from: coreImage, to: noiseFilter()!)
+    if let filteredCoreImage = blurFilter(on: coreImage, radius: 10) {
+      if let blendedCoreImage = blendFilter(foreground: randomCoreImage!, background: filteredCoreImage) {
+        if let filteredCGImage = context.createCGImage(blendedCoreImage, from: blendedCoreImage.extent) {
+          return UIImage(cgImage: filteredCGImage)
+        }
+      }
     }
-    return image
+  }
+  return image
+}
+
+func cropFilter(from image: CIImage, to: CIImage) -> CIImage? {
+  if let filter = CIFilter(name: "CICrop", withInputParameters: ["inputImage": to, "inputRectangle":image.extent]) {
+    return filter.value(forKey: "outputImage") as? CIImage
+  }
+  return nil
 }
 
 func blurFilter(on image: CIImage, radius: Double) -> CIImage? {
-    let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : image, "inputRadius": radius])
-    if let filteredImage = filter?.value(forKey: "outputImage") {
-        return filteredImage as? CIImage
-    }
-    return nil
+  if let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : image, "inputRadius": radius]) {
+    return filter.value(forKey: "outputImage") as? CIImage
+  }
+  return nil
 }
 
-func noiseFilter(image: CIImage, noiseLeve: Double, sharpness: Double) -> CIImage? {
-    return nil
+func noiseFilter() -> CIImage? {
+  let filter = CIFilter(name: "CIRandomGenerator")
+  return filter?.value(forKey: "outputImage") as? CIImage
+}
+
+func blendFilter(foreground: CIImage, background: CIImage) -> CIImage? {
+  if let blend = CIFilter(name: "CIOverlayBlendMode", withInputParameters: ["inputImage": foreground,
+                                                                            "inputBackgroundImage": background]) {
+    return blend.value(forKey: "outputImage") as? CIImage
+  }
+  return nil
 }
 
 func processSharedDataForPlayground() {
