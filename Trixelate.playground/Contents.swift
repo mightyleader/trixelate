@@ -135,12 +135,24 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
 }
 
 func applyFilters(to image: UIImage) -> UIImage {
-    let imageContext = CIContext.init(options: nil)
+    _ = CIContext()
     let coreImage = CIImage(image: image)
-    let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : coreImage!, "inputRadius": 10])
-    let filteredCoreImage = filter?.value(forKey: "outputImage")
-    let filteredCGImage = imageContext.createCGImage(filteredCoreImage as! CIImage, from: (filteredCoreImage! as AnyObject).extent)
-    return UIImage(cgImage: filteredCGImage!)
+    if let filteredCoreImage = blurFilter(on: coreImage!, radius: 10) {
+        return UIImage(ciImage: filteredCoreImage)
+    }
+    return image
+}
+
+func blurFilter(on image: CIImage, radius: Double) -> CIImage? {
+    let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : image, "inputRadius": radius])
+    if let filteredImage = filter?.value(forKey: "outputImage") {
+        return filteredImage as? CIImage
+    }
+    return nil
+}
+
+func noiseFilter(image: CIImage, noiseLeve: Double, sharpness: Double) -> CIImage? {
+    return nil
 }
 
 func processSharedDataForPlayground() {
