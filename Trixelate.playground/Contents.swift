@@ -135,23 +135,24 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
 }
 
 func applyFilters(to image: UIImage) -> UIImage {
-  let context = CIContext()
-  context
-  if let coreImage = CIImage(image: image) {
-    let randomCoreImage =  cropFilter(from: coreImage, to: noiseFilter()!)
-    if let filteredCoreImage = blurFilter(on: coreImage, radius: 10) {
-      if let blendedCoreImage = blendFilter(foreground: randomCoreImage!, background: filteredCoreImage) {
-        if let filteredCGImage = context.createCGImage(blendedCoreImage, from: blendedCoreImage.extent) {
-          return UIImage(cgImage: filteredCGImage)
+    let context = CIContext()
+    context
+    if let coreImage = CIImage(image: image) {
+        let croppingRect = CGRect(x: 80, y: 80, width: (coreImage.extent.width - 160), height: (coreImage.extent.height - 160)) //Gaussian blur reduces the image size by a predictable value which adds a white border which I don't want.
+        let randomCoreImage =  cropFilter(from: coreImage.extent, to: noiseFilter()!)
+        
+        if let filteredCoreImage = blurFilter(on: coreImage, radius: 10),
+           let blendedCoreImage = blendFilter(foreground: randomCoreImage!, background: filteredCoreImage),
+           let croppedBlendedCoreImage = cropFilter(from: croppingRect, to: blendedCoreImage),
+           let filteredCGImage = context.createCGImage(croppedBlendedCoreImage, from: croppedBlendedCoreImage.extent) {
+             return UIImage(cgImage: filteredCGImage)
         }
-      }
     }
-  }
-  return image
+    return image
 }
 
-func cropFilter(from image: CIImage, to: CIImage) -> CIImage? {
-  if let filter = CIFilter(name: "CICrop", withInputParameters: ["inputImage": to, "inputRectangle":image.extent]) {
+func cropFilter(from rect: CGRect, to: CIImage) -> CIImage? {
+  if let filter = CIFilter(name: "CICrop", withInputParameters: ["inputImage": to, "inputRectangle":rect]) {
     return filter.value(forKey: "outputImage") as? CIImage
   }
   return nil
