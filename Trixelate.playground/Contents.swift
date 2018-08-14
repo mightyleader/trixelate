@@ -138,9 +138,9 @@ func applyFilters(to image: UIImage) -> UIImage {
     let context = CIContext()
     context
     if let coreImage = CIImage(image: image) {
-        let croppingRect = CGRect(x: 80, y: 80, width: (coreImage.extent.width - 160), height: (coreImage.extent.height - 160)) //Gaussian blur reduces the image size by a predictable value which adds a white border which I don't want.
+        let croppingRect = CGRect(x: 80, y: 80, width: (coreImage.extent.width - 160), height: (coreImage.extent.height - 160)) //Gaussian blur reduces the image size, by a predictable value, which adds a white border which I don't want.
         let randomCoreImage =  cropFilter(from: coreImage.extent, to: noiseFilter()!)
-        
+        //TODO: switch the blur radius based on source image size
         if let filteredCoreImage = blurFilter(on: coreImage, radius: 10),
            let blendedCoreImage = blendFilter(foreground: randomCoreImage!, background: filteredCoreImage),
            let croppedBlendedCoreImage = cropFilter(from: croppingRect, to: blendedCoreImage),
