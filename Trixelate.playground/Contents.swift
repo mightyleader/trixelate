@@ -124,7 +124,7 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
   do {
     let data = try Data(contentsOf: url)
     if let image = AveragableImage(data: data) {
-      let trixelTest = TrixelatedView(image: image, ratio: 10)
+      let trixelTest = TrixelatedView(image: image, ratio: 15)
       let filteredTrixel = applyFilters(to: trixelTest.asImage())
       return filteredTrixel
     }
