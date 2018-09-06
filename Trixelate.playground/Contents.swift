@@ -152,14 +152,14 @@ func applyFilters(to image: UIImage) -> UIImage {
 }
 
 func cropFilter(from rect: CGRect, to: CIImage) -> CIImage? {
-  if let filter = CIFilter(name: "CICrop", withInputParameters: ["inputImage": to, "inputRectangle":rect]) {
+  if let filter = CIFilter(name: "CICrop", parameters: ["inputImage": to, "inputRectangle":rect]) {
     return filter.value(forKey: "outputImage") as? CIImage
   }
   return nil
 }
 
 func blurFilter(on image: CIImage, radius: Double) -> CIImage? {
-  if let filter = CIFilter(name: "CIGaussianBlur", withInputParameters: ["inputImage" : image, "inputRadius": radius]) {
+  if let filter = CIFilter(name: "CIGaussianBlur", parameters: ["inputImage" : image, "inputRadius": radius]) {
     return filter.value(forKey: "outputImage") as? CIImage
   }
   return nil
@@ -171,7 +171,7 @@ func noiseFilter() -> CIImage? {
 }
 
 func blendFilter(foreground: CIImage, background: CIImage) -> CIImage? {
-  if let blend = CIFilter(name: "CIOverlayBlendMode", withInputParameters: ["inputImage": foreground,
+  if let blend = CIFilter(name: "CIOverlayBlendMode", parameters: ["inputImage": foreground,
                                                                             "inputBackgroundImage": background]) {
     return blend.value(forKey: "outputImage") as? CIImage
   }
@@ -188,7 +188,7 @@ func processSharedDataForPlayground() {
       if let trixellatedImage = trixelate(imageAtURL: pathURL) {
         let guidString = guidAsString().appending(".jpg")
         let newPath = rootPath.appendingPathComponent(guidString)
-        let imageData = UIImageJPEGRepresentation(trixellatedImage, 0.5)
+        let imageData = trixellatedImage.jpegData(compressionQuality: 0.5)
         try! imageData?.write(to: newPath, options: .noFileProtection)
       }
     }
