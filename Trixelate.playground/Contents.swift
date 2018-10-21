@@ -25,7 +25,7 @@ class TrixelatedView: UIView {
   override func draw(_ rect: CGRect) {
     self.backgroundColor = UIColor.white
     
-    let ratio = self.frame.size.width / self.frame.size.height
+    let ratio: CGFloat = 1.1547 //self.frame.size.width / self.frame.size.height
     let trixelHeight = self.frame.size.height / CGFloat(self.widthRatio)
     let trixelWidth = trixelHeight * ratio
     let columns = (self.frame.size.width / trixelWidth) + 1
@@ -124,7 +124,7 @@ func trixelate(imageAtURL url: URL) -> UIImage? {
   do {
     let data = try Data(contentsOf: url)
     if let image = AveragableImage(data: data) {
-      let trixelTest = TrixelatedView(image: image, ratio: 15)
+      let trixelTest = TrixelatedView(image: image, ratio: 12)
       let filteredTrixel = applyFilters(to: trixelTest.asImage())
       return filteredTrixel
     }
@@ -138,10 +138,25 @@ func applyFilters(to image: UIImage) -> UIImage {
     let context = CIContext()
     context
     if let coreImage = CIImage(image: image) {
+      var blurRadius: Double
+      let megaPixels = image.size.width * image.size.height
+      switch megaPixels {
+      case 0..<250000:
+        blurRadius = 0.05
+      case 250000..<500000:
+        blurRadius = 0.5
+      case 500000..<1000000:
+        blurRadius = 1.0
+      case 1000000..<5000000:
+        blurRadius = 3.0
+      default:
+        blurRadius = 10.0
+      }
+      
         let croppingRect = CGRect(x: 80, y: 80, width: (coreImage.extent.width - 160), height: (coreImage.extent.height - 160)) //Gaussian blur reduces the image size, by a predictable value, which adds a white border which I don't want.
         let randomCoreImage =  cropFilter(from: coreImage.extent, to: noiseFilter()!)
         //TODO: switch the blur radius based on source image size
-        if let filteredCoreImage = blurFilter(on: coreImage, radius: 10),
+        if let filteredCoreImage = blurFilter(on: coreImage, radius: blurRadius),
            let blendedCoreImage = blendFilter(foreground: randomCoreImage!, background: filteredCoreImage),
            let croppedBlendedCoreImage = cropFilter(from: croppingRect, to: blendedCoreImage),
            let filteredCGImage = context.createCGImage(croppedBlendedCoreImage, from: croppedBlendedCoreImage.extent) {
